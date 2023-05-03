@@ -1,17 +1,20 @@
 #include "WatchySpiro.h"
-#include <Fonts/FreeMonoBold12pt7b.h>
+#include "FreeMonoBold14pt7b.h"
 
 const uint8_t BATTERY_DISPLAY_START_Y = 34;
 const uint8_t BATTERY_DISPLAY_START_X = 40;
 const uint8_t BATTERY_DISPLAY_HEIGHT = 4;
 const uint8_t BATTERY_SEGMENT_WIDTH = 20;
 
+const uint8_t FONT_HEIGHT = 18; // 18px is the max height of numbers in font
+const uint8_t FONT_WIDTH = 16; // 16px is the with of all characters in font
+
 const bool DARKMODE = false;
 
 void WatchySpiro::drawWatchFace(){
     display.fillScreen(DARKMODE ? GxEPD_BLACK : GxEPD_WHITE);
     display.setTextColor(DARKMODE ? GxEPD_WHITE : GxEPD_BLACK);
-    display.setFont(&FreeMonoBold12pt7b); // ? width, 15px high
+    display.setFont(&FreeMonoBold14pt7b);
 
     syncTime();
     drawBackground();
@@ -73,7 +76,7 @@ void WatchySpiro::drawTime(){
 }
 
 void WatchySpiro::drawDate(){
-    display.setCursor(131, 195);
+    display.setCursor(200 - (5 * FONT_WIDTH), 195); // 5 characters in 'dd/MM'
     uint8_t day = currentTime.Day;
     if (day < 10){
         display.print("0");
@@ -92,7 +95,7 @@ void WatchySpiro::drawSteps(){
     if (currentTime.Hour == 0 && currentTime.Minute == 0){
       sensor.resetStepCounter();
     }
-    display.setCursor(0, 15);
+    display.setCursor(0, FONT_HEIGHT);
     display.println(sensor.getCounter());
 }
 
